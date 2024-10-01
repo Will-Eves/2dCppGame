@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode(800, 450), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "SFML works!");
 
     while (window.isOpen()) {
         sf::Event event;
