@@ -3,10 +3,14 @@
 int main(){
     sf::RenderWindow window(sf::VideoMode(1600, 900), "SFML works!");
 
-	sf::RectangleShape rect1 = sf::RectangleShape(sf::Vector2f(100, 100));
+    sf::RectangleShape rect1 = sf::RectangleShape(sf::Vector2f(100, 100));
 
-	sf::CircleShape circ1 = sf::CircleShape(50);
+    sf::CircleShape circ1 = sf::CircleShape(50);
+
     circ1.setPosition(sf::Vector2f(200, 200));
+
+    int x = 0;
+    int y = 0;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -15,18 +19,31 @@ int main(){
                 window.close();
             }
         }
-        int x = 0;
-        int y = 0;
-        // get input
+
+        // get input here
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             x -= 10;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            x += 10;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+            y -= 10;
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            y += 10;
         }
 
         window.clear();
 
         // draw stuff here
-		window.draw(rect1);
-		window.draw(circ1);
+
+        rect1.setPosition(sf::Vector2f(x, y));
+
+        window.draw(rect1);
+
+        window.draw(circ1);
 
         window.display();
     }
