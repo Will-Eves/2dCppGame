@@ -23,6 +23,18 @@ int main(){
 
     sound.play();
 
+    // load image
+
+    sf::Texture texture;
+    if (!texture.loadFromFile("res/Textures/mario.jpg")) {
+        return -1;
+    }
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setPosition(500, 300);
+    // sprite.setScale(sf::Vector2f(1.0f / sprite.getScale().x * 100, 1.0f / sprite.getScale().y * 100));
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -55,6 +67,8 @@ int main(){
         window.draw(rect1);
 
         window.draw(circ1);
+
+        window.draw(sprite);
 
         window.display();
     }
