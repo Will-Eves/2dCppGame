@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 int main(){
     sf::RenderWindow window(sf::VideoMode(1600, 900), "SFML works!");
@@ -11,6 +12,16 @@ int main(){
 
     int x = 0;
     int y = 0;
+
+    sf::SoundBuffer buffer;
+    if (!buffer.loadFromFile("res/Sounds/explosion.wav")) {
+        return -1;
+    }
+
+    sf::Sound sound;
+    sound.setBuffer(buffer);
+
+    sound.play();
 
     while (window.isOpen()) {
         sf::Event event;
