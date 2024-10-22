@@ -9,6 +9,7 @@ int main(){
     sf::CircleShape circ1 = sf::CircleShape(50);
 
     circ1.setPosition(sf::Vector2f(200, 200));
+    circ1.setFillColor(sf::Color(255, 0, 0));
 
     int x = 0;
     int y = 0;
@@ -61,8 +62,6 @@ int main(){
         window.clear();
 
         // draw stuff here
-
-        rect1.setPosition(sf::Vector2f(x, y));
 
         window.draw(rect1);
 
