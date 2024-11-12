@@ -3,10 +3,12 @@
 // Galaga with Zombies
 
 int main(){
-    Game::Start();
+    Game game;
 
-    while (Game::IsRunning()) {
-        Game::Update();
+    game.Start();
+
+    while (game.IsRunning()) {
+        game.Update();
     }
 
     return 0;
