@@ -1,5 +1,15 @@
-#include <iostream>
+#include "Game.h"
+
+// Galaga with Zombies
+
 int main() {
-	std::cout << "hellow world";
-	std::system ("pause")
+    Game game;
+
+    game.Start();
+
+    while (game.IsRunning()) {
+        game.Update();
+    }
+
+    return 0;
 }
