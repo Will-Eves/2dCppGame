@@ -17,9 +17,6 @@ struct GameScene : Scene {
         circ1.setPosition(sf::Vector2f(200, 200));
         circ1.setFillColor(sf::Color(255, 0, 0));
 
-        int x = 0;
-        int y = 0;
-
         sf::SoundBuffer buffer;
         if (!buffer.loadFromFile("res/Sounds/explosion.wav")) {
             return;
@@ -42,6 +39,9 @@ struct GameScene : Scene {
 
 	virtual void Start() {
 		// lol!
+
+        x = 100;
+        y = 0;
 	}
 
 	virtual void Update() {
@@ -50,7 +50,7 @@ struct GameScene : Scene {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             y -= 10;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             y += 10;
         }
         if (y < 0) y = 0;

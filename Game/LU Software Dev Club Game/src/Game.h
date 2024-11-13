@@ -7,6 +7,8 @@
 
 #include "Scenes/Scene.h"
 #include "Scenes/Game.h"
+#include "Scenes/MainMenu.h"
+#include "Scenes/LoseScreen.h"
 
 class Game {
 private:
@@ -39,7 +41,9 @@ public:
         window.Init(1600, 900, "Zombie Game");
 
         // Add all the scenes here
+        scenes.push_back(new MainMenu());
         scenes.push_back(new GameScene());
+        scenes.push_back(new LoseScreen());
 
         // Initialize all scenes here
         for (Scene* scene : scenes) {

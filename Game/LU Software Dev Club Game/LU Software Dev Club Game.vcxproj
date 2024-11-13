@@ -138,6 +138,8 @@
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Scenes\Game.h" />
+    <ClInclude Include="src\Scenes\LoseScreen.h" />
+    <ClInclude Include="src\Scenes\MainMenu.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
