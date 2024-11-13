@@ -2,7 +2,7 @@
 
 // Galaga with Zombies
 
-int main(){
+int main() {
     Game game;
 
     game.Start();
