@@ -7,20 +7,17 @@
 
 #include "Scenes/Scene.h"
 #include "Scenes/Game.h"
-#include "Scenes/MainMenu.h"
-#include "Scenes/LoseScreen.h"
 
-class Game {
-private:
+namespace Game {
     int scene_index;
     std::vector<Scene*> scenes;
     Scene* current_scene;
 
     Window window;
-public:
+
     bool IsRunning() {
-		return window.IsOpen();
-	}
+        return window.IsOpen();
+    }
 
     void LoadScene(int index) {
         if (index < 0 || index >= scenes.size()) return;
@@ -31,7 +28,12 @@ public:
 
         current_scene->Start();
     }
+}
 
+#include "Scenes/MainMenu.h"
+#include "Scenes/LoseScreen.h"
+
+namespace Game {
     void Start() {
         scene_index = 0;
 
@@ -52,8 +54,8 @@ public:
 
         // Load the first scene
         LoadScene(0);
-	}
-
+    }
+    
     void Update() {
         window.PollEvents();
 
@@ -64,4 +66,4 @@ public:
 
         window.Display();
 	}
-};
+}
