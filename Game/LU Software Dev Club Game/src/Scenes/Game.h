@@ -75,10 +75,10 @@ struct GameScene : Scene {
         // get input here
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            y -= 200 * dt;
+            y -= 500 * dt;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            y += 200 * dt;
+            y += 500 * dt;
         }
         if (y < 0) y = 0;
         else if (y > 900 - 100) y = 900 - 100;
@@ -87,7 +87,7 @@ struct GameScene : Scene {
             Bullet bullet;
             bullet.x = x;
             bullet.y = y;
-            bullet.dx = 1000; // bullet speed in pixles
+            bullet.dx = 500; // bullet speed in pixles
             bullets.push_back(bullet);
 
             time_till_shoot = 0.2f; // time between shots
@@ -95,8 +95,17 @@ struct GameScene : Scene {
 
         // update game objects here
 
+        int destroy_count = 0;
         for (int i = 0; i < bullets.size(); i++) {
             bullets[i].x += bullets[i].dx * dt;
+
+            if (bullets[i].x > 1600) {
+                destroy_count++;
+            }
+        }
+
+        for (int i = 0; i < destroy_count; i++) {
+            bullets.erase(bullets.begin());
         }
 
         // draw stuff here
