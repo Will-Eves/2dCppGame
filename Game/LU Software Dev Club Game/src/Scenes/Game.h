@@ -1,4 +1,5 @@
 #include <chrono>
+#include <ctime>
 
 struct Bullet {
     float x;
@@ -9,19 +10,24 @@ struct Bullet {
 };
 
 struct Zombie {
-    int x;
-    int y;
+    float x;
+    float y;
 
     int w = 100;
     int h = 100;
 
-    int dx = -200;
+    float dx = -200;
 
     int health = 2;
 };
 
 struct GameScene : Scene {
 	sf::Sound sound;
+
+    sf::RectangleShape background;
+    sf::RectangleShape grass_piece;
+
+    std::vector<sf::Vector2f> grass;
 
 	sf::Texture player_texture;
 	sf::Sprite player;
@@ -32,6 +38,8 @@ struct GameScene : Scene {
     std::vector<Bullet> bullets;
 
     std::vector<Zombie> zombies;
+
+    float time_till_spawn = 1.0f;
 
 	int x = 100;
 	int y = 0;
@@ -44,6 +52,18 @@ struct GameScene : Scene {
     std::chrono::steady_clock::time_point last_time;
 
 	virtual void Init() {
+        srand(time(0));
+
+        background.setSize(sf::Vector2f(1600, 900));
+        background.setFillColor(sf::Color(100, 200, 100));
+
+        grass_piece.setSize(sf::Vector2f(10, 20));
+        grass_piece.setFillColor(sf::Color(50, 165, 75));
+
+        for (int i = 0; i < 100; i++) {
+            grass.push_back(sf::Vector2f(rand() % 1590, rand() & 880));
+        }
+
         sf::SoundBuffer buffer;
         if (!buffer.loadFromFile("res/Sounds/explosion.wav")) {
             return;
@@ -87,6 +107,7 @@ struct GameScene : Scene {
         last_time = current_time;
 
         time_till_shoot -= dt;
+        time_till_spawn -= dt;
 
         // get input here
 
@@ -96,8 +117,20 @@ struct GameScene : Scene {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             y += 500 * dt;
         }
+
         if (y < 0) y = 0;
         else if (y > 900 - 100) y = 900 - 100;
+
+        if (time_till_spawn <= 0.0f) {
+            Zombie zombie;
+
+            zombie.x = 1600;
+            zombie.y = rand() % 800;
+
+            zombies.push_back(zombie);
+
+            time_till_spawn = 1.0f;
+        }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && time_till_shoot <= 0.0f) {
             Bullet bullet;
@@ -124,7 +157,20 @@ struct GameScene : Scene {
             bullets.erase(bullets.begin());
         }
 
+        for (int i = 0; i < zombies.size(); i++) {
+            zombies[i].x += zombies[i].dx * dt;
+
+            // destroy zombies here later
+        }
+
         // draw stuff here
+
+        main_window->Draw(background);
+
+        for (sf::Vector2f pos : grass) {
+            grass_piece.setPosition(pos);
+            main_window->Draw(grass_piece);
+        }
 
         player.setPosition(sf::Vector2f(100, y));
         main_window->Draw(player);
@@ -132,6 +178,11 @@ struct GameScene : Scene {
         for (Bullet bullet : bullets) {
             bullet_sprite.setPosition(sf::Vector2f(bullet.x, bullet.y));
             main_window->Draw(bullet_sprite);
+        }
+
+        for (Zombie zombie : zombies) {
+            player.setPosition(sf::Vector2f(zombie.x, zombie.y));
+            main_window->Draw(player);
         }
 	}
 };
