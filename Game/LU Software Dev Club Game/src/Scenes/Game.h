@@ -8,6 +8,18 @@ struct Bullet {
     float dy;
 };
 
+struct Zombie {
+    int x;
+    int y;
+
+    int w = 100;
+    int h = 100;
+
+    int dx = -200;
+
+    int health = 2;
+};
+
 struct GameScene : Scene {
 	sf::Sound sound;
 
@@ -19,8 +31,12 @@ struct GameScene : Scene {
 
     std::vector<Bullet> bullets;
 
+    std::vector<Zombie> zombies;
+
 	int x = 100;
 	int y = 0;
+
+    int health = 10;
 
     float time_till_shoot = 0.2f;
 
@@ -77,7 +93,7 @@ struct GameScene : Scene {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             y -= 500 * dt;
         }
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             y += 500 * dt;
         }
         if (y < 0) y = 0;
