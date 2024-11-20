@@ -3,8 +3,12 @@
 
 #include <vector>
 #include <iostream>
+#include <set>
+#include <algorithm>
 
 #include "Window.h"
+
+#include "Physics.h"
 
 #include "Scenes/Scene.h"
 #include "Scenes/Game.h"
