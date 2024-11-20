@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 
 #include <vector>
+#include <iostream>
 
 #include "Window.h"
 

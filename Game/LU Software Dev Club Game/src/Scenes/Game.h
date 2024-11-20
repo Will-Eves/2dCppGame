@@ -41,8 +41,8 @@ struct GameScene : Scene {
 
     float time_till_spawn = 1.0f;
 
-	int x = 100;
-	int y = 0;
+	float x = 100;
+	float y = 0;
 
     int health = 10;
 
@@ -103,7 +103,7 @@ struct GameScene : Scene {
 	virtual void Update() {
         auto current_time = std::chrono::high_resolution_clock::now();
 
-        float dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0f;
+        float dt = std::chrono::duration_cast<std::chrono::microseconds>(current_time - last_time).count() / 1000000.0f;
         last_time = current_time;
 
         time_till_shoot -= dt;
