@@ -1,6 +1,8 @@
+#include <chrono>
+
 struct Bullet {
-    int x;
-    int y;
+    float x;
+    float y;
 
     float dx;
     float dy;
@@ -19,6 +21,11 @@ struct GameScene : Scene {
 
 	int x = 100;
 	int y = 0;
+
+    float time_till_shoot = 0.2f;
+
+    // Time stuff
+    std::chrono::steady_clock::time_point last_time;
 
 	virtual void Init() {
         sf::SoundBuffer buffer;
@@ -53,28 +60,37 @@ struct GameScene : Scene {
 
         x = 100;
         y = 0;
+
+        last_time = std::chrono::high_resolution_clock::now();
 	}
 
 	virtual void Update() {
-        float dt = 0.01f;
+        auto current_time = std::chrono::high_resolution_clock::now();
+
+        float dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - last_time).count() / 1000.0f;
+        last_time = current_time;
+
+        time_till_shoot -= dt;
 
         // get input here
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            y -= 10;
+            y -= 200 * dt;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            y += 10;
+            y += 200 * dt;
         }
         if (y < 0) y = 0;
         else if (y > 900 - 100) y = 900 - 100;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && time_till_shoot <= 0.0f) {
             Bullet bullet;
             bullet.x = x;
             bullet.y = y;
-            bullet.dx = 10; // bullet speed in pixles
+            bullet.dx = 1000; // bullet speed in pixles
             bullets.push_back(bullet);
+
+            time_till_shoot = 0.2f; // time between shots
         }
 
         // update game objects here
