@@ -5,13 +5,16 @@
 #include <iostream>
 #include <set>
 #include <algorithm>
+#include <map>
+#include <sstream>
 
 #include "Window.h"
 
 #include "Physics.h"
 
+#include "UI.h"
+
 #include "Scenes/Scene.h"
-#include "Scenes/Game.h"
 
 namespace Game {
     int scene_index;
@@ -20,8 +23,10 @@ namespace Game {
 
     Window window;
 
+    bool running = true;
+
     bool IsRunning() {
-        return window.IsOpen();
+        return window.IsOpen() && running;
     }
 
     void LoadScene(int index) {
@@ -33,8 +38,13 @@ namespace Game {
 
         current_scene->Start();
     }
+
+    void Quit() {
+        running = false;
+    }
 }
 
+#include "Scenes/Game.h"
 #include "Scenes/MainMenu.h"
 #include "Scenes/LoseScreen.h"
 
@@ -46,6 +56,9 @@ namespace Game {
 
         // Init window
         window.Init(1600, 900, "Zombie Game");
+
+        // Init UI
+        UI::Init();
 
         // Add all the scenes here
         scenes.push_back(new MainMenu());

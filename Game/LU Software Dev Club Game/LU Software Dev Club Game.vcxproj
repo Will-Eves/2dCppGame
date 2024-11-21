@@ -142,6 +142,7 @@
     <ClInclude Include="src\Scenes\LoseScreen.h" />
     <ClInclude Include="src\Scenes\MainMenu.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
+    <ClInclude Include="src\UI.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,6 +9,8 @@ struct Bullet {
     float dy;
 
     bool destroy = false;
+
+    bool hit = false;
 };
 
 struct Zombie {
@@ -50,6 +52,7 @@ struct GameScene : Scene {
 	float y = 0;
 
     int health = 10;
+    int score = 0;
 
     float time_till_shoot = 0.2f;
 
@@ -70,6 +73,7 @@ struct GameScene : Scene {
         }
 
         if (!buffer.loadFromFile("res/Sounds/explosion.wav")) {
+            std::cout << "RES ISSUE : Couldn't Load Sound 'explosion.wav'" << std::endl;
             return;
         }
 
@@ -78,6 +82,7 @@ struct GameScene : Scene {
         // load image
 
         if (!player_texture.loadFromFile("res/Textures/mario.jpg")) {
+            std::cout << "RES ISSUE : Couldn't Load Texture 'mario.jpg'" << std::endl;
             return;
         }
 
@@ -86,6 +91,7 @@ struct GameScene : Scene {
         player.setScale(sf::Vector2f(1.0f / player_texture.getSize().x * 100, 1.0f / player_texture.getSize().y * 100));
 
         if (!bullet_texture.loadFromFile("res/Textures/fireball.png")) {
+            std::cout << "RES ISSUE : Couldn't Load Texture 'fireball.png'" << std::endl;
             return;
         }
 
@@ -94,10 +100,18 @@ struct GameScene : Scene {
 	}
 
 	virtual void Start() {
-		// lol!
+		// reset all variables here
 
         x = 100;
         y = 0;
+
+        health = 10;
+        score = 0;
+
+        bullets.clear();
+        zombies.clear();
+        time_till_shoot = 0.2f;
+        time_till_spawn = 1.0f;
 
         last_time = std::chrono::high_resolution_clock::now();
 	}
@@ -141,7 +155,7 @@ struct GameScene : Scene {
             Bullet bullet;
             bullet.x = x;
             bullet.y = y;
-            bullet.dx = 500; // bullet speed in pixles
+            bullet.dx = 1000; // bullet speed in pixles per second
             bullets.push_back(bullet);
 
             time_till_shoot = 0.2f; // time between shots
@@ -162,9 +176,16 @@ struct GameScene : Scene {
 
             // destroy zombies here later
             if (zombies[i].x < -zombies[i].w) {
-                // zombie is past
-
                 if (std::find(destroy_zombies.begin(), destroy_zombies.end(), i) == destroy_zombies.end()) destroy_zombies.push_back(i);
+
+                // zombie is past
+                // base take damage
+                health--;
+                sound.play();
+
+                if (health <= 0) {
+                    Game::LoadScene(2);
+                }
             }
 
             // if zombie passes player, player base loses health
@@ -181,9 +202,15 @@ struct GameScene : Scene {
                 if (Physics::AABB(bullet.x, bullet.y, 50, 50, zombie.x, zombie.y, zombie.w, zombie.h)) {
                     if(std::find(destroy_bullets.begin(), destroy_bullets.end(), bi) == destroy_bullets.end()) destroy_bullets.push_back(bi);
 
+                    bullets[bi].hit = true;
+
                     zombie.health--;
 
                     if (zombie.health <= 0) {
+                        // zombie die here
+
+                        score++;
+
                         if (std::find(destroy_zombies.begin(), destroy_zombies.end(), zi) == destroy_zombies.end()) destroy_zombies.push_back(zi);
                     }
                 }
@@ -195,9 +222,9 @@ struct GameScene : Scene {
         std::sort(destroy_zombies.begin(), destroy_zombies.end());
 
         for (int i = 0; i < destroy_bullets.size(); i++) {
-            bullets.erase(bullets.begin() + destroy_bullets[i] - i);
+            if (bullets[destroy_bullets[i] - i].hit) sound.play();
 
-            sound.play();
+            bullets.erase(bullets.begin() + destroy_bullets[i] - i);
         }
 
         for (int i = 0; i < destroy_zombies.size(); i++) {
@@ -225,5 +252,15 @@ struct GameScene : Scene {
             player.setPosition(sf::Vector2f(zombie.x, zombie.y));
             main_window->Draw(player);
         }
-	}
+
+        // draw UI here
+
+        std::stringstream health_text;
+        health_text << "Health : " << health;
+        UI::DrawText(health_text.str(), 0, 0, "SUSE", 40, sf::Color::Black, UI::Align::Left, UI::Align::Top);
+	
+        std::stringstream score_text;
+        score_text << "Score : " << score;
+        UI::DrawText(score_text.str(), 0, 45, "SUSE", 40, sf::Color::Black, UI::Align::Left, UI::Align::Top);
+    }
 };
